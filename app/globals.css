@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans text-gray-800 antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold leading-tight;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-lg
+           hover:bg-primary-700 transition-all duration-200 shadow-md hover:shadow-lg
+           active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 bg-accent text-white font-semibold px-6 py-3 rounded-lg
+           hover:bg-accent-dark transition-all duration-200 shadow-md hover:shadow-lg
+           active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 border-2 border-primary text-primary font-semibold px-6 py-3 rounded-lg
+           hover:bg-primary hover:text-white transition-all duration-200
+           active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .section-heading {
+    @apply text-3xl md:text-4xl font-bold text-primary-900 leading-tight;
+  }
+
+  .section-subheading {
+    @apply text-lg text-gray-600 mt-3 leading-relaxed;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent
+           transition-all duration-200 bg-white;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E3A8A;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3B82F6;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Section wave divider */
+.wave-top {
+  clip-path: ellipse(80% 60% at 50% 100%);
+}
