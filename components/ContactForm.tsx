@@ -39,6 +39,7 @@ export default function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -72,10 +73,28 @@ export default function ContactForm() {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setLoading(false);
-    setSubmitted(true);
+    setServerError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setServerError(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setServerError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -91,7 +110,7 @@ export default function ContactForm() {
           Thank you, <strong>{formData.name}</strong>! Our team will get back to you within 24 hours.
         </p>
         <button
-          onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", service: "", message: "" }); }}
+          onClick={() => { setSubmitted(false); setServerError(""); setFormData({ name: "", email: "", phone: "", service: "", message: "" }); }}
           className="btn-outline text-sm"
         >
           Send Another Message
@@ -208,6 +227,15 @@ export default function ContactForm() {
         )}
         <p className="text-gray-400 text-xs text-right">{formData.message.length}/500</p>
       </div>
+
+      {serverError && (
+        <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+          <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {serverError}
+        </div>
+      )}
 
       <button
         type="submit"

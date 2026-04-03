@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const services = [
   "Thesis Writing",
@@ -24,18 +25,19 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 bg-secondary rounded-lg flex items-center justify-center shadow-md">
-                <span className="text-white font-bold text-lg">R</span>
-              </div>
-              <div>
-                <span className="text-white font-bold text-xl leading-none block">Research</span>
-                <span className="text-accent font-bold text-xl leading-none block -mt-0.5">Buddhi</span>
+            <Link href="/" className="flex flex-col items-start gap-3 mb-4 group w-fit">
+              <div className="rounded-xl overflow-hidden transition-opacity duration-200 group-hover:opacity-80">
+                <Image
+                  src="/logo.png"
+                  alt="ResearchBuddhi Logo"
+                  width={120}
+                  height={120}
+                  className="h-16 w-auto object-contain block"
+                />
               </div>
             </Link>
             <p className="text-blue-200 text-sm leading-relaxed mb-5">
-              Your trusted partner in academic excellence. We help PhD scholars, researchers,
-              and students achieve their academic goals with expert guidance.
+              Empowering scholars with high-quality academic research support.
             </p>
             <div className="flex gap-3">
               {["WhatsApp", "Email"].map((platform) => (
