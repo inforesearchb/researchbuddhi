@@ -1,39 +1,47 @@
-import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
 
-export async function POST(request: NextRequest) {
+exports.handler = async function (event) {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: "Method not allowed." }),
+    };
+  }
+
+  let body;
   try {
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-    }
+    body = JSON.parse(event.body || "{}");
+  } catch {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Invalid request body." }),
+    };
+  }
 
-    const { name, email, phone, service, message } = body as Record<string, string>;
+  const { name, email, phone, service, message } = body;
 
-    // Validate required fields
-    if (!name?.trim() || !email?.trim() || !message?.trim()) {
-      return NextResponse.json(
-        { error: "Name, email, and message are required." },
-        { status: 400 }
-      );
-    }
+  if (!name?.trim() || !email?.trim() || !message?.trim()) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Name, email, and message are required." }),
+    };
+  }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json(
-        { error: "Please provide a valid email address." },
-        { status: 400 }
-      );
-    }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Please provide a valid email address." }),
+    };
+  }
 
-    if (message.trim().length < 20) {
-      return NextResponse.json(
-        { error: "Message must be at least 20 characters." },
-        { status: 400 }
-      );
-    }
+  if (message.trim().length < 20) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Message must be at least 20 characters." }),
+    };
+  }
 
+  try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -89,16 +97,15 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true }),
+    };
   } catch (error) {
     console.error("Contact form error:", error);
-    return NextResponse.json(
-      { error: "Failed to send message. Please try again later." },
-      { status: 500 }
-    );
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Failed to send message. Please try again later." }),
+    };
   }
-}
-
-export async function GET() {
-  return NextResponse.json({ error: "Method not allowed." }, { status: 405 });
-}
+};
